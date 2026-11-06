@@ -1,8 +1,10 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # 惯性与连续碰撞二十一关发布 — 2026-10-25
 
 版本 `20261025T112914Z-momentum-7e25a3e0`，固定基线 `970568a`。运动章新增 01.6–01.8，碰撞章新增 02.8–02.10，现共 21 关、63 颗星。玩法和时机窗口见 [关卡设计](../docs/momentum-routes.md)。旧关 ID、成绩与草稿键、面包机接触提示、英文默认介绍页、手机分享及演示视频保留。
 
-应用目录为 `/opt/optional-reality/releases/20261025T112914Z-momentum-7e25a3e0`；静态目录为 `/var/www/muu-tech/releases/20261025T112914Z-momentum-7e25a3e0-optional-reality-game`。生产 API 为新建的 `optional-reality-20261025T112914Z-momentum-7e25a3e0.service`，仅监听回环 3004。旧 3001、3002、3003 实例均保留。Apache 仅 graceful 切换共享代理，前后端 current 原子替换；没有停止、重启或 kill 任何现有服务。
+应用目录为 `/opt/optional-reality/releases/20261025T112914Z-momentum-7e25a3e0`；静态目录为 `/var/www/games/releases/20261025T112914Z-momentum-7e25a3e0-optional-reality-game`。生产 API 为新建的 `optional-reality-20261025T112914Z-momentum-7e25a3e0.service`，仅监听回环 3004。旧 3001、3002、3003 实例均保留。Apache 仅 graceful 切换共享代理，前后端 current 原子替换；没有停止、重启或 kill 任何现有服务。
 
 发布前后，原服务、3002 预检实例、3003 上一生产实例及 Apache 的 MainPID 分别保持 84030、83102、85100、34946，启动时间相同。新实例 MainPID 为 90509。持久 `.env` 内容未变，没有下载密钥。旧哈希资源复制进新静态目录，旧页面可以继续加载其资源。
 
@@ -29,7 +31,7 @@
 set -eu
 id=20261025T112914Z-momentum-7e25a3e0
 app_root=/opt/optional-reality
-web_root=/var/www/muu-tech
+web_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "$app_root/releases/$id"
 test "$(readlink -f "$web_root/current")" = "$web_root/releases/$id-optional-reality-game"
 curl -fsS http://127.0.0.1:3003/api/health

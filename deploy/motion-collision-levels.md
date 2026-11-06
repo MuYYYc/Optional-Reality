@@ -1,3 +1,5 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # 运动与碰撞十五关发布 — 2026-10-25
 
 ## 当前版本与服务
@@ -5,7 +7,7 @@
 - 发布标识：`20261025T073145Z-levels-25c46280`。
 - 固定基线：`290c4778d71bda9dc8faf91bcd2ad3bf13ed99af`；关卡范围 SHA256：`25c46280`（完整摘要见发布目录 RELEASE.json）。本次使用独立源码快照，未夹带工作区其他未提交改动。
 - 应用：`/opt/optional-reality/releases/20261025T073145Z-levels-25c46280`。
-- 静态：`/var/www/muu-tech/releases/20261025T073145Z-levels-25c46280-optional-reality-game`。
+- 静态：`/var/www/games/releases/20261025T073145Z-levels-25c46280-optional-reality-game`。
 - 生产 API：`optional-reality-20261025T073145Z-levels-25c46280.service`，只监听 `127.0.0.1:3003`；Apache 的共享 `/api/` 代理已指向 3003。
 - 原 `optional-reality.service` 继续监听回环 3001。切换前后 MainPID 均为 **84030**、启动时间相同；Apache 主进程均为 **34946**、启动时间相同。本次未执行 service stop/restart 或 kill。
 
@@ -41,7 +43,7 @@ set -eu
 id=20261025T073145Z-levels-25c46280
 old=20261025T072312Z-5d98103-toaster-language
 app_root=/opt/optional-reality
-web_root=/var/www/muu-tech
+web_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "$app_root/releases/$id"
 test "$(readlink -f "$web_root/current")" = "$web_root/releases/$id-optional-reality-game"
 curl -fsS http://127.0.0.1:3001/api/health

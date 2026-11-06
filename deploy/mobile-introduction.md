@@ -1,3 +1,5 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # 手机介绍页与二维码 — 2026-10-25
 
 静态版本：`20261025T111302Z-mobile-intro-7d173ddb-optional-reality-game`。入口仍为 **https://optionalreality.site/intro**；根目录游戏和 `/showcase/` 保持原地址。修改范围是介绍 HTML、sitemap 和新增 `assets/intro-20261025/`，未重新构建或替换线上的游戏 bundle。
@@ -30,7 +32,7 @@
 
 ```sh
 set -eu
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$site_root/current")" = "$site_root/releases/20261025T111302Z-mobile-intro-7d173ddb-optional-reality-game"
 previous="$site_root/releases/20261025T104814Z-demo-video-6d6a3614-optional-reality-game"
 test -f "$previous/index.html"

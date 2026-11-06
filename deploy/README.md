@@ -1,81 +1,44 @@
-# Apache 介绍页部署
+# Optional Reality 部署
 
-此文保留早期介绍页的部署与备份记录。当前十五关游戏及 API 已上线，最新目录、版本、备份与回退以 [线上游戏记录](./live-game.md) 为准。
+游戏前端与 Muu Tech 官网已于 **2026-11-06** 分开。游戏发版只操作 `/var/www/games`，不再切换 `/var/www/muu-tech/current`。当前拓扑与迁移前备份见 [目录隔离记录](./webroot-layout.md)，游戏版本和历次验收见 [线上记录](./live-game.md)。
 
-以下记录早期仅发布 `site/` 静态介绍页的流程；当时无需 Node 服务、模型密钥或构建步骤。现行游戏部署请使用上面的线上游戏记录。
+## 当前目录
 
-## 两个目录与切换
+| 用途 | 路径／服务 |
+| --- | --- |
+| 游戏前端 | `/var/www/games/releases/<版本>`，入口 `/var/www/games/current` |
+| Muu Tech 官网 | `/var/www/muu-tech/current`，由官网任务维护 |
+| 游戏后端 | `/opt/optional-reality/current`，生产 API 为回环 `127.0.0.1:3005` |
+| 生产 API unit | `optional-reality-20261025T121313Z-dccbd5d-physics-ui.service` |
+| 共用 HTTP-01 验证目录 | `/var/www/acme`，不依附任何站点 current |
 
-- Muu Tech 原官网：`/var/www/muu-tech/releases/20261022-hero/`
-- Optional Reality 介绍页：`/var/www/muu-tech/releases/20261024-optional-reality-intro-spring-rules/`
-- Apache 80/443 的 DocumentRoot：`/var/www/muu-tech/current`
+`optionalreality.site` 和 `www.optionalreality.site` 的根目录是游戏，`/intro` 为介绍；`muuyyy.cfd` 根目录现为 Muu Tech，旧 `/intro`、`/demo`、`/showcase`、`/api` 路径以 307 转向专用游戏域名。原官网的 camera/result 路由保留。
 
-此前的中文介绍页保留在 `20261024-optional-reality-intro/`，首个基础英文版保留在 `20261024-optional-reality-intro-en/`。英文与动画基础版保留在 `20261024-optional-reality-intro-media/`，首屏保留淡色球与连续绿色虚线；当时左侧 GIF 展示悬空、加重力、吃星星、弹簧压缩与回弹、再次下落、反转重力后上升的完整实验。
+## 前端发版
 
-两个站点保存在独立目录，通过 `current` **软链接**选择。目录不使用硬链接；切换时创建临时软链接，再用同目录 `mv -Tf` 原子替换。旧目录始终保留。
+1. 检查工作区与远端，在固定源码快照完成本次必要验证和 `npm run build`。
+2. 只读核对游戏／官网 current、游戏后端 current、3005 健康与实际 Apache 路由。备份游戏静态和本次涉及的配置，校验归档；不要打包真实 `.env` 或私钥。
+3. 将构建后的 `site/` 内容上传到新的 `/var/www/games/releases/<版本>/`。保留线上旧哈希资源、介绍媒体与演示文件，不覆盖原 release。目录 755、文件 644。
+4. 先执行下面的 `--check`，再去掉 `--check` 执行同一条命令。`<新版本>` 和 `<当前版本>` 必须替换为实际核实的目录名。
 
-`switch-site.sh` 在服务器上由 root 执行，要求显式给出新目录和预期当前目录，检查配置及链接后才切换：
-
-```bash
+```sh
 ssh -o BatchMode=yes -o User=root muuyyy \
-  'bash -s -- /var/www/muu-tech/releases/20261024-optional-reality-intro-spring-rules /var/www/muu-tech/releases/20261022-hero' \
+  'bash -s -- --check /var/www/games/releases/<新版本> /var/www/games/releases/<当前版本>' \
   < deploy/switch-site.sh
 ```
 
-回滚到 Muu Tech（不需要解压或覆盖网页）：
+脚本检查新目录同时包含介绍页 `index.html` 和游戏 `demo/index.html`，验证真实路径、预期 current 与 Apache 配置，再原子切换游戏链接。它拒绝官网目录和解析后越出 games/releases 的路径；`--check` 不创建或替换链接。只发布静态文件无需重载 Apache，也无需重启任何 API。
 
-```bash
-ssh -o BatchMode=yes -o User=root muuyyy \
-  'bash -s -- /var/www/muu-tech/releases/20261022-hero /var/www/muu-tech/releases/20261024-optional-reality-intro-spring-rules' \
-  < deploy/switch-site.sh
-```
+5. 验证两个游戏域名的根目录、关卡、选关、`/intro`、旧 `/demo/`、公开资源哈希、API 和 TLS；另外确认官网首页、camera/result 路由保持原状。需要真实模型验收时使用合成消息，不记录密钥。
 
-脚本只切换链接；不修改 Apache 配置，无需 reload。`site/` 是唯一上传目录；部署文档、源码归档、密钥与备份不上传到 webroot。新 release 应为目录 755、文件 644，不在发布目录内编辑或构建。
+## 回退与后端
 
-## 备份与恢复
+静态回退仍用同一脚本：将实际旧版本作为第一个参数，将核实的当前游戏版本作为第二个参数，先 `--check` 再切换。旧 release 位于 games/releases；muu-tech/releases 下的同名路径仅为兼容软链接，不再作为发版目标。
 
-备份时间：2026-10-24 00:51:22 EDT（04:51:22 UTC）。
+后端代码发布沿用独立预检服务／端口和已有进程保留约定，见 [最近一次前后端发布](./physics-ui.md)。静态脚本不修改应用 current 或 API 代理；前后端需要配套回退时，单独核对并切换应用与 API 路由。**不要从迁移前备份整份恢复 Apache 或 Certbot 配置**，以免恢复旧 webroot 或覆盖官网路由；只更新本次需要的指令，并先备份、检查后 graceful。
 
-- 服务器：`/var/backups/muu-tech/20261024T045122Z/`
-- 本地：`.localwork/backups/muu-tech-20261024T045122Z/`（已忽略，不提交）
-- 原主页 SHA256：`bef4a9c2e874a8091f13d8b491b4fe41c3bbe7204ffac03b9d61e49b13d254d6`
+## 证书与历史
 
-服务器备份包含完整网站 `site.tar.gz`、逐文件校验清单、原 current 指向、两个 vhost 及摄像头 include 的 `apache-config.tar.gz`、配置校验清单、启用项与证书路径及权限记录。证书和私钥继续留在原位置，不复制私钥。
+共用一张 `muuyyy.cfd` SAN 证书，三个域名的续期都使用 `/var/www/acme`。后续部署不更改证书、私钥、密钥环境文件或续期目录，见 [域名与路由](./domains-and-routing.md)。
 
-本地同时保留服务器备份和 `local-sources.tar.gz`，后者包含 RV1106 下的 `muu-tech/` 与 `seo-tools/`，包括 public、部署脚本、生成器、模板、主题和私有维护笔记。备份权限为目录 700、文件 600，不公开上传。
-
-归档哈希及所有网站、配置、源码文件均已校验；网站已解压到本地 `restore-check/site/` 并逐文件复验。若原 release 损坏，应将 `site.tar.gz` 解压至新的恢复目录、恢复目录 755/文件 644、核对 `site-files.sha256`，再通过同一切换脚本选用恢复目录，不就地覆盖损坏版本。
-
-## 路由与 SEO
-
-- 新站只有根页面及页内锚点，没有 SPA 通配回退。
-- 新站使用自己的标题、描述、canonical、robots 和单页 sitemap，不继承 Muu Tech 公司 schema。
-- 原官网 `/zh/`、`/solutions/…`、`/projects/…` 等旧路径在新站返回真实 404；不会把失效页面伪装成 200 首页。完整页面和 SEO 保存在旧 release 与备份，回切即恢复。
-- Apache 的 `/camera/` 隔离代理、TLS 证书、续期与 HTTP ACME challenge 例外均保留；不修改其他站点或服务。
-- 介绍页的本站静态脚本只处理 GitHub 提示与动画暂停，不调用 API、不加载外部字体或资源，沿用现有严格 CSP。
-- 以后上线真实应用时，应单独部署受管理的后端，再按需要添加 API 反代和最小 CSP 调整。
-
-## 当前介绍页动画
-
-介绍页保留原首屏 SVG，下面两张示意图改用本地 Canvas 模块，不再下载 GIF。`intro-motion-20261024.js` 负责入口和暂停，`diagram-player-20261024.js` 管理时钟/可见性/清理，spring、orbit、timeline、paint 文件分别保存绘制和运动。原 PNG 作为无 Canvas 或减少动态效果时的静态后备。两幅图都是概念示意，不与游戏世界连接。
-
-弹簧使用连续胡克弹力和阻尼，不重设接触/释放速度；能量条反映弹性势能，回弹时下降。轨道图采用连续椭圆运动和指向中心的力箭头。隐藏、离屏或手动暂停时停止计时，恢复不追赶丢失帧。部署时需要把整个 `site/` 连同其模块文件一起发布。
-
-`npm run test:diagrams` 验证运动连续性、能量、帧率、暂停、减少动态效果、后备和清理；已包含在 `npm test`。
-
-## 早期示意图文件（保留）
-
-- 首屏斜坡图为 `site/index.html` 中的 SVG，重力标注和水平轨迹可直接编辑。
-- 弹簧：`site/assets/gravity-spring-rules.gif` 与 `gravity-spring-rules-poster.png`。
-- 轨道：`site/assets/orbit-experiment.gif` 与 `orbit-experiment-poster.png`。
-- 保持 16:9 比例即可替换媒体；同时更新 HTML 中的说明与 alt 文本。图片和文案相互独立。
-- GIF 是说明概念的循环示意，不是已经实现的交互模拟；页面保留这一说明。
-- 动画可由按钮暂停；系统开启减少动态效果时默认使用静态图。
-- 源生成器为 `scripts/generate-experiments.py`，需要 Pillow。`python3 scripts/generate-experiments.py --only spring` 只生成重力与弹簧 GIF（约 8.3 秒、138 个源帧）及静态首帧；`--only orbit` 只生成轨道 GIF。不需要在服务器安装 Python 或 Pillow。
-- 重力与弹簧采用 240Hz 固定步长的一维质量–弹簧模型。脚本校验事件顺序、星星收集、弹簧压缩、首次回弹，以及重力反转后先减速再上升；镜头复位使用淡出淡入。右侧命令为 `add gravity` 和 `reverse the gravity`。
-- GitHub 入口暂时显示提示：`The GitHub repository will be available after the hackathon ends.`；未来开放时再替换为实际链接。
-- 修改静态资源后使用新版本文件名或内容哈希，避免浏览器继续使用旧缓存；发布到新的 release 后切换，不在当前目录内改文件。
-
-当前文案明确由用户观察时机并应用准备好的简单指令；命令队列仅为原型开发计划，介绍页没有可执行队列或真实模型接口。
-
-弹簧 GIF 中只将 `add gravity` 与 `reverse the gravity` 作为规则指令展示；压缩与回弹由画面表现，不写成用户需要发送的操作。
+2026-10-24 的介绍页、早期切换流程与备份原文保存在 [历史介绍页记录](./intro-history.md)。历史发布文档的游戏前端路径和命令已映射到 games；版本、端口和服务状态仍是历史记录，回退前须按当前目录映射核对。

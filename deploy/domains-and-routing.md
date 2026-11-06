@@ -1,3 +1,5 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # 三域名、单 SAN 证书与游戏入口
 
 2026-10-25 已生效。三个域名都访问同一个游戏与 API：
@@ -27,7 +29,7 @@ HTTP 跳转到同一域名的 HTTPS，保留路径与查询；ACME HTTP-01 例�
 既有 Certbot 账户和 webroot 验证用于扩展：
 
 ```sh
-certbot certonly --webroot -w /var/www/muu-tech/current \
+certbot certonly --webroot -w /var/www/acme \
   --cert-name muuyyy.cfd --expand \
   -d muuyyy.cfd -d optionalreality.site -d www.optionalreality.site \
   --non-interactive
@@ -46,8 +48,8 @@ certbot renew --cert-name muuyyy.cfd --dry-run \
 
 此次只切换网站路由与介绍页链接，没有发布新的游戏代码或重启模型服务。应用仍为 `9f4c2e8`，应用 current 仍是 `/opt/optional-reality/releases/20261025T040224Z-9f4c2e8`。
 
-- 新静态 current：`/var/www/muu-tech/releases/20261025T043627Z-domains-optional-reality-game`
-- 原静态目录保留：`/var/www/muu-tech/releases/20261025T040224Z-9f4c2e8-optional-reality-game`
+- 新静态 current：`/var/www/games/releases/20261025T043627Z-domains-optional-reality-game`
+- 原静态目录保留：`/var/www/games/releases/20261025T040224Z-9f4c2e8-optional-reality-game`
 - 服务器备份：`/var/backups/optional-reality/20261025T043627Z-domains/`
 - 本地备份：`.localwork/domain-routing-20261025T043627Z/`，已忽略，目录 700、归档 600
 - 网站归档 SHA256：`f94f48c95d68f45bdb3a9e50b28651ac455b9d426fd52d7932dbf126c5a06763`

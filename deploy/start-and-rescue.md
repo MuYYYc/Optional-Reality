@@ -1,8 +1,10 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # Start 与救援空间发布 — 2026-10-25
 
 - 应用提交：`0345847a691c1c6977285cd761dbc9c5fd5fab25`。
 - 应用：`/opt/optional-reality/releases/20261025T070356Z-0345847-start-rescue`。
-- 静态：`/var/www/muu-tech/releases/20261025T070356Z-0345847-start-rescue-optional-reality-game`。
+- 静态：`/var/www/games/releases/20261025T070356Z-0345847-start-rescue-optional-reality-game`。
 - 三个域名根目录、旧 `/demo/`、介绍页路由继续保留。Start 直接开始当前规则下的模拟，队列保持待发；首次发送仍会自动开始。
 - 包含向上、向右各扩展 20% 的一次救援加时、贴屏幕左缘的边框、平滑镜头及重试恢复。加时通关仍扣一星。
 
@@ -19,6 +21,6 @@
 - 服务器：`/var/backups/optional-reality/20261025T070356Z-0345847-start-rescue`。
 - 本地：`.localwork/deploy-20261025T070356Z-0345847-start-rescue/backup`，权限受限且已忽略；三个归档两端 SHA256 一致，不含实际 `.env` 或证书私钥。
 - 上一应用：`/opt/optional-reality/releases/20261025T064128Z-dcc2bac-surfaces`。
-- 上一静态：`/var/www/muu-tech/releases/20261025T064128Z-dcc2bac-surfaces-optional-reality-game`。
+- 上一静态：`/var/www/games/releases/20261025T064128Z-dcc2bac-surfaces-optional-reality-game`。
 
 回退前确认两个 current 仍指向本页当前版本，再使用临时软链接原子替换至上述旧目录；重启 optional-reality 并确认回环 3001 健康后切换静态 current。只回退代码，不回退持久配置。新旧 release 和旧哈希资源均保留。

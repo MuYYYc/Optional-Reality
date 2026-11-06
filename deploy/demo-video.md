@@ -1,3 +1,5 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # 循环演示视频 — 2026-10-25
 
 - 静态版本：`20261025T104814Z-demo-video-6d6a3614-optional-reality-game`。
@@ -19,7 +21,7 @@ FFmpeg 保留浏览器捕获时间，添加交叉淡化及同一标题开头／�
 
 ```sh
 set -eu
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$site_root/current")" = "$site_root/releases/20261025T104814Z-demo-video-6d6a3614-optional-reality-game"
 previous="$site_root/releases/20261025T082400Z-toaster-contact-77f8ef2e-optional-reality-game"
 test -f "$previous/demo/index.html"

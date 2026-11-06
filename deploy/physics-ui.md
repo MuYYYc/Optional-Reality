@@ -1,3 +1,5 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # 渐进摩擦、碰撞教学与结算背景
 
 2026-10-25 发布，游戏源码补丁至 `e502c14`。线上入口为 [Optional Reality](https://optionalreality.site/)，旧 `/demo/` 路径继续可用。
@@ -22,10 +24,10 @@
 | 项目 | 当前目录／服务 |
 | --- | --- |
 | 应用 | `/opt/optional-reality/releases/20261025T121313Z-dccbd5d-physics-ui` |
-| 静态 | `/var/www/muu-tech/releases/20261025T121313Z-dccbd5d-physics-ui-optional-reality-game` |
+| 静态 | `/var/www/games/releases/20261025T121313Z-dccbd5d-physics-ui-optional-reality-game` |
 | 新 API | `optional-reality-20261025T121313Z-dccbd5d-physics-ui.service`，仅回环端口 3005 |
 | 原应用 | `/opt/optional-reality/releases/20261025T112914Z-momentum-7e25a3e0`，端口 3004 |
-| 原静态 | `/var/www/muu-tech/releases/20261025T120636Z-whisper-aligned-optional-reality-game` |
+| 原静态 | `/var/www/games/releases/20261025T120636Z-whisper-aligned-optional-reality-game` |
 | 服务器备份 | `/var/backups/optional-reality/20261025T121313Z-dccbd5d-physics-ui/` |
 | 本地备份 | `.localwork/deploy-20261025T121313Z-dccbd5d-physics-ui/backup/`，已忽略 |
 

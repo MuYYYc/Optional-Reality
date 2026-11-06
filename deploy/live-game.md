@@ -1,3 +1,5 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # 线上游戏 — 2026-10-25
 
 ## 最新发布：物理参数 UI 与碰撞教学
@@ -67,7 +69,7 @@
 ## 历史版本：蒸汽朋克入口、生活背景与关卡画廊
 
 - 地址：[muuyyy.cfd/demo/](https://muuyyy.cfd/demo/)，固定应用版本 `9f4c2e8ec0fd368c54ac2b516fcd4180ada24659`，release `20261025T040224Z-9f4c2e8`（UTC；本地日期 2026-10-25）。
-- 应用 current：`/opt/optional-reality/releases/20261025T040224Z-9f4c2e8`；静态 current：`/var/www/muu-tech/releases/20261025T040224Z-9f4c2e8-optional-reality-game`。
+- 应用 current：`/opt/optional-reality/releases/20261025T040224Z-9f4c2e8`；静态 current：`/var/www/games/releases/20261025T040224Z-9f4c2e8-optional-reality-game`。
 - 开始页与选关采用 Steel and Steam 主题，黄铜机械浮岛、铜管门、齿轮、压力表和少量蒸汽；三章九关有真实几何预览、最近小关与本机最佳星数，保留直达链接。离开关卡取消旧编译，草稿保留。
 - 九关有独立背景配置，行人、汽车与密集水粒子响应加速度；宇宙、山谷地标及晨光/午后/夜晚面包店各有区别。背景固定步长且与任务物理隔离；瀑布最终为 360 个细圆粒子与最多 24 个短寿命溅水。
 - 原创音乐调整为 112 BPM、短音符、弹跳低音与轻合成敲击。开关、偏好、后台暂停及切关不叠加保持原逻辑。
@@ -92,7 +94,7 @@
 ```sh
 set -eu
 app_root=/opt/optional-reality
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "$app_root/releases/20261025T040224Z-9f4c2e8"
 test "$(readlink -f "$site_root/current")" = "$site_root/releases/20261025T040224Z-9f4c2e8-optional-reality-game"
 test -f "$app_root/releases/20261025T030845Z-5e73f8a/server/src/index.ts"
@@ -110,7 +112,7 @@ curl -fsS https://muuyyy.cfd/api/status
 ## 历史版本：鸟、加速度反馈、碰撞手感与 Gemini 接口
 
 - 游戏：[muuyyy.cfd/demo/](https://muuyyy.cfd/demo/)，应用版本 `5e73f8aba01a5c5d8654425d2efb04b04c1509fe`，release `20261025T030845Z-5e73f8a`（UTC；本地日期 2026-10-24）。
-- 应用 current：`/opt/optional-reality/releases/20261025T030845Z-5e73f8a`；静态 current：`/var/www/muu-tech/releases/20261025T030845Z-5e73f8a-optional-reality-game`。正式服务 active，只监听 `127.0.0.1:3001`，临时 3115 服务已停止。
+- 应用 current：`/opt/optional-reality/releases/20261025T030845Z-5e73f8a`；静态 current：`/var/www/games/releases/20261025T030845Z-5e73f8a-optional-reality-game`。正式服务 active，只监听 `127.0.0.1:3001`，临时 3115 服务已停止。
 - 三个 subagent 分别完成独立鸟模块、加速度指示模块与碰撞呈现模块：小鸟 1.6 倍/鹰 1.8 倍及独立翼姿；星星旁的真实向量方向/数值和 600ms 变化强调；按真实入射法向速度产生的接触波纹和最多 8% 视觉压缩。碰撞观察器 700 tick 对照确认不改变物理轨迹。
 - 固定提交独立全新安装后，74 个 Vitest 文件、653 项测试，加首页 13 项 Node 测试共 666 项通过；类型检查与生产构建通过。测试限制四进程，避免共享机器并行超时；没有放宽断言或单项超时。JS 包大于 500kB 的原有构建提示仍存在。
 - 公网 20 个静态资源与独立构建逐字节一致，health/configured 正常。浏览器确认新资源、放大鸟和向量徽标，并实际完成 bounce 满分路线、0/3 到 3/3 与结算，warning/error 为空。
@@ -134,17 +136,17 @@ curl -fsS https://muuyyy.cfd/api/status
 ```sh
 set -eu
 app_root=/opt/optional-reality
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "/opt/optional-reality/releases/20261025T030845Z-5e73f8a"
-test "$(readlink -f "$site_root/current")" = "/var/www/muu-tech/releases/20261025T030845Z-5e73f8a-optional-reality-game"
+test "$(readlink -f "$site_root/current")" = "/var/www/games/releases/20261025T030845Z-5e73f8a-optional-reality-game"
 test -f "/opt/optional-reality/releases/20261025T024029Z-75af06a/server/src/index.ts"
-test -f "/var/www/muu-tech/releases/20261025T024029Z-75af06a-optional-reality-game/demo/index.html"
+test -f "/var/www/games/releases/20261025T024029Z-75af06a-optional-reality-game/demo/index.html"
 apache2ctl configtest
 ln -s "/opt/optional-reality/releases/20261025T024029Z-75af06a" "$app_root/.rollback-app-$$"
 mv -Tf "$app_root/.rollback-app-$$" "$app_root/current"
 systemctl restart optional-reality
 curl -fsS --retry 15 --retry-connrefused --retry-delay 1 http://127.0.0.1:3001/api/health
-ln -s "/var/www/muu-tech/releases/20261025T024029Z-75af06a-optional-reality-game" "$site_root/.rollback-web-$$"
+ln -s "/var/www/games/releases/20261025T024029Z-75af06a-optional-reality-game" "$site_root/.rollback-web-$$"
 mv -Tf "$site_root/.rollback-web-$$" "$site_root/current"
 curl -fsS https://muuyyy.cfd/api/health
 ```
@@ -152,7 +154,7 @@ curl -fsS https://muuyyy.cfd/api/health
 ## 历史版本：连续物理、游戏反馈与图示教学
 
 - 游戏：[muuyyy.cfd/demo/](https://muuyyy.cfd/demo/)，应用版本 `75af06a59d145e9325acb14dee46d13d51842e3b`，release `20261025T024029Z-75af06a`。标识使用 UTC，本地发布日期为 2026-10-24。
-- 应用 current：`/opt/optional-reality/releases/20261025T024029Z-75af06a`；静态 current：`/var/www/muu-tech/releases/20261025T024029Z-75af06a-optional-reality-game`。前后端同版，正式服务 active，仅监听 `127.0.0.1:3001`；临时 3115 验证服务已停止。
+- 应用 current：`/opt/optional-reality/releases/20261025T024029Z-75af06a`；静态 current：`/var/www/games/releases/20261025T024029Z-75af06a-optional-reality-game`。前后端同版，正式服务 active，仅监听 `127.0.0.1:3001`；临时 3115 验证服务已停止。
 - 包含连续被动弹簧、方向响应的背景云鸟、真实拾取反馈、黑洞吸入后结算、独立事件音效、三条紧凑消息、快捷应用、三课居中教学和全关规则清单展开。保留共享 main 中固定摩擦表面与 runway 别名更新。
 - bounce 首访 `.9` 普通路线保留，主动加载满分教程才换 `.1` 与向上加速度 1；教程和暂停菜单均强调接近触地时发送。U 形轨道教程路线未改。
 - 固定提交在独立目录全新 `npm ci` 后通过 66 个文件、603 项 Vitest、13 项 Node 首页测试、类型检查与生产构建，共 616 项。构建仍提示单个 JS 包大于 500kB，不影响本次通过。
@@ -179,17 +181,17 @@ curl -fsS https://muuyyy.cfd/api/health
 ```sh
 set -eu
 app_root=/opt/optional-reality
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "/opt/optional-reality/releases/20261025T024029Z-75af06a"
-test "$(readlink -f "$site_root/current")" = "/var/www/muu-tech/releases/20261025T024029Z-75af06a-optional-reality-game"
+test "$(readlink -f "$site_root/current")" = "/var/www/games/releases/20261025T024029Z-75af06a-optional-reality-game"
 test -f "/opt/optional-reality/releases/20261025T023726Z-acd3840/server/src/index.ts"
-test -f "/var/www/muu-tech/releases/20261025T023726Z-acd3840-optional-reality-game/demo/index.html"
+test -f "/var/www/games/releases/20261025T023726Z-acd3840-optional-reality-game/demo/index.html"
 apache2ctl configtest
 ln -s "/opt/optional-reality/releases/20261025T023726Z-acd3840" "$app_root/.rollback-app-$$"
 mv -Tf "$app_root/.rollback-app-$$" "$app_root/current"
 systemctl restart optional-reality
 curl -fsS --retry 15 --retry-connrefused --retry-delay 1 http://127.0.0.1:3001/api/health
-ln -s "/var/www/muu-tech/releases/20261025T023726Z-acd3840-optional-reality-game" "$site_root/.rollback-web-$$"
+ln -s "/var/www/games/releases/20261025T023726Z-acd3840-optional-reality-game" "$site_root/.rollback-web-$$"
 mv -Tf "$site_root/.rollback-web-$$" "$site_root/current"
 curl -fsS https://muuyyy.cfd/api/health
 ```
@@ -197,7 +199,7 @@ curl -fsS https://muuyyy.cfd/api/health
 ## 历史版本：结算界面、可读性与背景音乐
 
 - 游戏：[muuyyy.cfd/demo/](https://muuyyy.cfd/demo/)，版本 `7da00d4bcde298acf4b0be3d54cdfcf63fdf3f2e`。
-- release ID `20261025T010404Z-7da00d4`（UTC 标识；本地发布日期为 2026-10-24）。应用 current 为 `/opt/optional-reality/releases/20261025T010404Z-7da00d4`；静态 current 为 `/var/www/muu-tech/releases/20261025T010404Z-7da00d4-optional-reality-game`。本轮文档收尾通过只读 SSH 再次核对两个真实指向、正式服务 active 及回环健康 `{ "ok": true }`。
+- release ID `20261025T010404Z-7da00d4`（UTC 标识；本地发布日期为 2026-10-24）。应用 current 为 `/opt/optional-reality/releases/20261025T010404Z-7da00d4`；静态 current 为 `/var/www/games/releases/20261025T010404Z-7da00d4-optional-reality-game`。本轮文档收尾通过只读 SSH 再次核对两个真实指向、正式服务 active 及回环健康 `{ "ok": true }`。
 - 此版包含九关与原有评分/加速度规则、新结算星形、强化的配色字号和首次可信操作后播放的原创背景音乐。音乐可独立关闭、保存偏好，切关不叠加。第一轮线上 UI、满分路线和音乐生命周期已验收；第二轮新场景与动画尚未发布，不包含在此记录中。
 - 发布记录与现场证据位于忽略目录 `.localwork/deploy-polish/`。真实公网模型向量验收三条：向下得到 (2,20)，向上得到 (2,-20)，反转后得到 (2,20)。
 - 保留原 Node、Apache/TLS、systemd 与持久 `.env`，后端继续只监听回环地址。
@@ -219,17 +221,17 @@ curl -fsS https://muuyyy.cfd/api/health
 ```sh
 set -eu
 app_root=/opt/optional-reality
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "/opt/optional-reality/releases/20261025T010404Z-7da00d4"
-test "$(readlink -f "$site_root/current")" = "/var/www/muu-tech/releases/20261025T010404Z-7da00d4-optional-reality-game"
+test "$(readlink -f "$site_root/current")" = "/var/www/games/releases/20261025T010404Z-7da00d4-optional-reality-game"
 test -f "/opt/optional-reality/releases/20261025T004029Z-f4b59d1/server/src/index.ts"
-test -f "/var/www/muu-tech/releases/20261025T004029Z-f4b59d1-optional-reality-game/demo/index.html"
+test -f "/var/www/games/releases/20261025T004029Z-f4b59d1-optional-reality-game/demo/index.html"
 apache2ctl configtest
 ln -s "/opt/optional-reality/releases/20261025T004029Z-f4b59d1" "$app_root/.rollback-app-$$"
 mv -Tf "$app_root/.rollback-app-$$" "$app_root/current"
 systemctl restart optional-reality
 curl -fsS --retry 15 --retry-connrefused --retry-delay 1 http://127.0.0.1:3001/api/health
-ln -s "/var/www/muu-tech/releases/20261025T004029Z-f4b59d1-optional-reality-game" "$site_root/.rollback-web-$$"
+ln -s "/var/www/games/releases/20261025T004029Z-f4b59d1-optional-reality-game" "$site_root/.rollback-web-$$"
 mv -Tf "$site_root/.rollback-web-$$" "$site_root/current"
 curl -fsS https://muuyyy.cfd/api/health
 ```
@@ -237,7 +239,7 @@ curl -fsS https://muuyyy.cfd/api/health
 ## 历史版本：九关、星星评分与统一加速度
 
 - 游戏：[muuyyy.cfd/demo/](https://muuyyy.cfd/demo/)，应用版本 `f4b59d1a6b2b43c2b49d825f64e9bec322ef1a52`。
-- release ID `20261025T004029Z-f4b59d1`（UTC 标识；本地发布时间为 2026-10-24）。应用 current 指向 `/opt/optional-reality/releases/20261025T004029Z-f4b59d1`；静态 current 指向 `/var/www/muu-tech/releases/20261025T004029Z-f4b59d1-optional-reality-game`。
+- release ID `20261025T004029Z-f4b59d1`（UTC 标识；本地发布时间为 2026-10-24）。应用 current 指向 `/opt/optional-reality/releases/20261025T004029Z-f4b59d1`；静态 current 指向 `/var/www/games/releases/20261025T004029Z-f4b59d1-optional-reality-game`。
 - 九关均有三颗星，新增 One More Turn。到出口可普通通关，全部星星加出口获满分；多次反弹满分路线采用高弹性后增强向下加速度。每条消息均有小号 Send now 和删除按钮。
 - 前后端同时切换到单一 acceleration 向量协议，gravity 是竖直分量别名；方向与强度统一，向下 20 保留为 +20。旧页面需要刷新后使用新协议。
 - 独立源码安装后 437 项测试、类型检查、生产构建通过。私有端口 3113 预发布与正式 HTTPS API 各验证三条真实模型消息，向量依次为 (2,20)、(2,-20)、(2,20)。
@@ -261,17 +263,17 @@ curl -fsS https://muuyyy.cfd/api/health
 ```sh
 set -eu
 app_root=/opt/optional-reality
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "/opt/optional-reality/releases/20261025T004029Z-f4b59d1"
-test "$(readlink -f "$site_root/current")" = "/var/www/muu-tech/releases/20261025T004029Z-f4b59d1-optional-reality-game"
+test "$(readlink -f "$site_root/current")" = "/var/www/games/releases/20261025T004029Z-f4b59d1-optional-reality-game"
 test -f "/opt/optional-reality/releases/20261024T233406Z-fcfcbff/server/src/index.ts"
-test -f "/var/www/muu-tech/releases/20261024T233406Z-fcfcbff-optional-reality-game/demo/index.html"
+test -f "/var/www/games/releases/20261024T233406Z-fcfcbff-optional-reality-game/demo/index.html"
 apache2ctl configtest
 ln -s "/opt/optional-reality/releases/20261024T233406Z-fcfcbff" "$app_root/.rollback-app-$$"
 mv -Tf "$app_root/.rollback-app-$$" "$app_root/current"
 systemctl restart optional-reality
 curl -fsS --retry 15 --retry-connrefused --retry-delay 1 http://127.0.0.1:3001/api/health
-ln -s "/var/www/muu-tech/releases/20261024T233406Z-fcfcbff-optional-reality-game" "$site_root/.rollback-web-$$"
+ln -s "/var/www/games/releases/20261024T233406Z-fcfcbff-optional-reality-game" "$site_root/.rollback-web-$$"
 mv -Tf "$site_root/.rollback-web-$$" "$site_root/current"
 curl -fsS https://muuyyy.cfd/api/health
 ```
@@ -279,7 +281,7 @@ curl -fsS https://muuyyy.cfd/api/health
 ## 历史版本：共享能力与真实 AI 验收
 
 - 游戏：https://muuyyy.cfd/demo/；应用版本 `fcfcbff80a09cf54e2e8a8fbb88e204192cbc6c5`。
-- 发布目录 `20261024T233406Z-fcfcbff`（UTC 标识）；应用 current 指向 `/opt/optional-reality/releases/20261024T233406Z-fcfcbff`，静态 current 指向 `/var/www/muu-tech/releases/20261024T233406Z-fcfcbff-optional-reality-game`。
+- 发布目录 `20261024T233406Z-fcfcbff`（UTC 标识）；应用 current 指向 `/opt/optional-reality/releases/20261024T233406Z-fcfcbff`，静态 current 指向 `/var/www/games/releases/20261024T233406Z-fcfcbff-optional-reality-game`。
 - 全关共用完整物理能力目录与固定模型提示。真实 API 首轮发现中文“往左 0.5”被理解成正数，修正本地方向识别和提示后再验收。
 - 本地真实编译器：13 次供应商请求、85 条消息通过；发布后经公网本站转发：13 次请求、85 条消息再次全部通过，包含八关各十条错词/中英文口语/方向/相对及组合指令，以及设备限幅、命名表面和非法指令拒绝。
 - 独立源码目录全新 `npm ci` 后，378 项测试、类型检查和生产构建通过。服务器临时回环端口 3112 检查真实模型成功，切换后该临时服务已停止。
@@ -310,7 +312,7 @@ curl -fsS https://muuyyy.cfd/api/health
 ```sh
 set -eu
 app_root=/opt/optional-reality
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "$app_root/releases/20261024T233406Z-fcfcbff"
 test "$(readlink -f "$site_root/current")" = "$site_root/releases/20261024T233406Z-fcfcbff-optional-reality-game"
 test -f "$app_root/releases/20261024T231848Z-c103fad/server/src/index.ts"
@@ -331,7 +333,7 @@ curl -fsS https://muuyyy.cfd/api/status
 - 应用版本：`c103fad12d8489c0a8ad13201cf64a1af92f0e9f`，包含新增关卡及共享物理规则、指令纠正和数值限幅修正。
 - 发布目录：`20261024T231848Z-c103fad`，时间标识为 UTC。独立源码目录重新 `npm ci`，340 项测试、类型检查、生产构建通过。
 - 应用 current：`/opt/optional-reality/releases/20261024T231848Z-c103fad`。
-- 静态 current：`/var/www/muu-tech/releases/20261024T231848Z-c103fad-optional-reality-game`。
+- 静态 current：`/var/www/games/releases/20261024T231848Z-c103fad-optional-reality-game`。
 - 前后端更新为同一版本，服务器使用原 Node.js 24.22.1 与 systemd 服务。持久 `.env` 及 API 密钥保留，不复制开发机配置。线上 `configured:true`。
 - 前端页面 SHA256：`7cefea534ac28567c91f87d0e072381f908ec95a7caa3907701811c1f5f64650`，JS 为 `index-CG4FDoOk.js`；公网文件与本地构建逐字节一致。
 - 沿用原首页，只把五关文案改为八关；保留旧哈希资源，使已打开页面仍能加载资源。Apache、TLS 与 camera 代理配置未改。
@@ -354,7 +356,7 @@ curl -fsS https://muuyyy.cfd/api/status
 # 在服务器上以 root 执行；保留所有新旧 release
 set -eu
 app_root=/opt/optional-reality
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "$app_root/releases/20261024T231848Z-c103fad" || exit 1
 test "$(readlink -f "$site_root/current")" = "$site_root/releases/20261024T231848Z-c103fad-optional-reality-game" || exit 1
 apache2ctl configtest || exit 1
@@ -377,7 +379,7 @@ curl -fsS https://muuyyy.cfd/api/status
 
 - SSH：`ssh -o User=root muuyyy`
 - 应用：`/opt/optional-reality/current` → `/opt/optional-reality/releases/20261024T224908Z-d29fa43`
-- Apache 静态目录：`/var/www/muu-tech/current` → `/var/www/muu-tech/releases/20261024T224908Z-optional-reality-game`
+- Apache 静态目录：`/var/www/games/current` → `/var/www/games/releases/20261024T224908Z-optional-reality-game`
 - 持久配置：`/etc/optional-reality/.env`，从 `.env.example` 复制，`AI_API_KEY` 留空，`APP_ORIGIN=https://muuyyy.cfd`。
 - 服务：`optional-reality.service`，以独立用户运行，仅监听 `127.0.0.1:3001`。填写密钥后执行 `systemctl restart optional-reality`。
 - API：Apache 的 `/api/` 反代到上述服务；游戏 `/demo/` 的 CSP 允许同源连接。
@@ -389,6 +391,6 @@ curl -fsS https://muuyyy.cfd/api/status
 
 切换前备份：`/var/backups/optional-reality/20261024T224908Z/`，包含原站点归档、Apache 配置归档及原 SSL 配置。原静态 release 保留。
 
-仅回切介绍页可沿用 `switch-site.sh`，新目录为 `/var/www/muu-tech/releases/20261024-optional-reality-intro-spring-rules`，预期当前目录为本次游戏静态目录。若同时撤销 API，恢复备份中的 `muu-tech-ssl.conf`，运行 `apache2ctl configtest` 后 reload Apache，并停止 `optional-reality` 服务。
+仅回切介绍页可沿用 `switch-site.sh`，新目录为 `/var/www/games/releases/20261024-optional-reality-intro-spring-rules`，预期当前目录为本次游戏静态目录。若同时撤销 API，恢复备份中的 `muu-tech-ssl.conf`，运行 `apache2ctl configtest` 后 reload Apache，并停止 `optional-reality` 服务。
 
 配置健康检查：`curl -fsS https://muuyyy.cfd/api/status`。未填密钥时应为 `configured:false`，本地简单指令仍可游玩；填好密钥并重启后为 `configured:true`。本次未测试真实模型调用。

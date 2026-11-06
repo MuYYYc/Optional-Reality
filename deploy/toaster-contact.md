@@ -1,3 +1,5 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # 面包机首次接触提示 — 2026-10-25
 
 静态版本 `20261025T082400Z-toaster-contact-77f8ef2e-optional-reality-game`，在已发布的图解版本 `20261025T081305Z-bakery-guide-c1135fd1` 上叠加本轮固定修改；范围 SHA256 `77f8ef2e91ad31ed07fcb1227e739514a075a8893bbb67a1508b2324c86a3439`。
@@ -14,7 +16,7 @@
 
 ```sh
 set -eu
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$site_root/current")" = "$site_root/releases/20261025T082400Z-toaster-contact-77f8ef2e-optional-reality-game"
 previous="$site_root/releases/20261025T081305Z-bakery-guide-c1135fd1-optional-reality-game"
 test -f "$previous/demo/index.html"

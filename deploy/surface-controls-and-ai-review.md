@@ -1,10 +1,12 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # 表面行为与 AI 二次解释发布 — 2026-10-25
 
 ## 当前版本
 
 - 提交：`dcc2bac9a3cd3a39c7d05fbc071f61ed6c95c0be`，正常推送 `main`。
 - 应用：`/opt/optional-reality/releases/20261025T064128Z-dcc2bac-surfaces`。
-- 静态：`/var/www/muu-tech/releases/20261025T064128Z-dcc2bac-surfaces-optional-reality-game`。
+- 静态：`/var/www/games/releases/20261025T064128Z-dcc2bac-surfaces-optional-reality-game`。
 - 根目录为游戏，`/intro` 为介绍，`/demo/` 保持兼容；`optionalreality.site`、`www.optionalreality.site`、`muuyyy.cfd` 同步。
 
 一般弹性／摩擦指令影响所有可修改表面；点名仅改一处，相对修改分别读取每个表面的当前值，固定墙体保持保护。队列直接标识 All surfaces 或具体名称，独立材质的场景标签显示实际值。详见[表面指令行为](../docs/surface-command-scope.md)。
@@ -26,7 +28,7 @@
 上一对版本为：
 
 - `/opt/optional-reality/releases/20261025T061037Z-7db06ab-ai-review`
-- `/var/www/muu-tech/releases/20261025T061037Z-7db06ab-ai-review-optional-reality-game`
+- `/var/www/games/releases/20261025T061037Z-7db06ab-ai-review-optional-reality-game`
 
 回退前须确认两个 current 仍指向本页当前版本；如果已有后续发布，先核对最新记录。用临时软链接原子替换应用 current，重启 `optional-reality` 并确认回环 3001 健康，再成对替换静态 current。只回退代码，不改持久 `.env`、路由或证书。正式服务保持普通用户运行、仅监听回环 3001；3118 预检服务验收后停止。
 

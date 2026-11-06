@@ -1,9 +1,11 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # Gemini → DeepSeek 兜底发布 — 2026-10-25
 
 本次在现有 `94c7f501c981b4d8663013cb26c31ae6c1796822` 上，仅叠加供应商兜底、脱敏日志和浏览器协议兼容补丁。未包含共享工作区的 AST、物理意图提示词和开场规则提示改动。
 
 - 应用：`/opt/optional-reality/releases/20261025T052554Z-api-fallback-94c7f50`。
-- 静态：`/var/www/muu-tech/releases/20261025T052554Z-api-fallback-94c7f50-optional-reality-game`。
+- 静态：`/var/www/games/releases/20261025T052554Z-api-fallback-94c7f50-optional-reality-game`。
 - 备份：`/var/backups/optional-reality/20261025T052554Z-api-fallback-94c7f50/`，目录 700，包含旧应用源码（排除 .env 与依赖）、旧静态目录、原链接、服务单元和仅在服务器保留的配置备份（600）。旧 release 与旧哈希资源继续保留。
 - 独立本地发布快照：`.localwork/api-fallback-20261025/source/`；归档和测试日志不提交。应用归档 SHA256 `5be6ae8584d0f2379c8c29bea846a75935442428333bca724701609a58ebc2b8`，静态归档 `cff6d110fbcb3777db27ef528745eae39416ead00baca6105d3cd460b97ebe62`，服务器再次校验通过。
 - 持久配置保留 Gemini 主服务与原两套独立密钥，仅设置 `AI_FALLBACK_PROVIDER=deepseek`、`AI_PRIMARY_TIMEOUT_MS=8000`、`AI_TIMEOUT_MS=30000`。未上传开发机配置或下载服务器密钥；配置仍为 root:optional-reality、640。
@@ -37,7 +39,7 @@ ssh -o User=root muuyyy 'journalctl -u optional-reality --since "15 minutes ago"
 ```sh
 set -eu
 app_root=/opt/optional-reality
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "$app_root/releases/20261025T052554Z-api-fallback-94c7f50"
 test "$(readlink -f "$site_root/current")" = "$site_root/releases/20261025T052554Z-api-fallback-94c7f50-optional-reality-game"
 ln -s "$app_root/releases/20261025T051001Z-94c7f50" "$app_root/.rollback-fallback-app-$$"

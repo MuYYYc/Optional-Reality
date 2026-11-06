@@ -1,6 +1,8 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # 面包机口语指令修复 — 2026-10-25
 
-应用提交 `5d9810375c144d6475a77503223d648b16463f07`；发布标识 `20261025T072312Z-5d98103-toaster-language`。应用 current 位于 `/opt/optional-reality/releases/`，静态 current 位于 `/var/www/muu-tech/releases/`，静态目录在标识后加 `-optional-reality-game`。三个域名已同步。
+应用提交 `5d9810375c144d6475a77503223d648b16463f07`；发布标识 `20261025T072312Z-5d98103-toaster-language`。应用 current 位于 `/opt/optional-reality/releases/`，静态 current 位于 `/var/www/games/releases/`，静态目录在标识后加 `-optional-reality-game`。三个域名已同步。
 
 用户遇到“toaster增加弹性”被拒绝，“toaster增加弹力”被接受。修复前本次两次独立线上 API 调用和浏览器尝试均成功，未复现同一次拒绝；检查确认两句此前都依赖 AI，且 toaster 只有 spring_power，没有 restitution，因此不能把偶发误解当作必然的权限错误。
 

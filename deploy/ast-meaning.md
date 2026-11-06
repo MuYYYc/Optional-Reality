@@ -1,9 +1,11 @@
+> 2026-11-06 路径迁移：以下游戏前端路径及命令已映射到 `/var/www/games`。历史版本、端口和服务状态只代表当次发布；执行前按 [当前部署说明](README.md) 重新核对，禁止整份恢复旧 Apache/Certbot 配置。
+
 # AST 与物理意图提示词发布 — 2026-10-25
 
 本次在当前线上 `277ecc5`（开场提示与加法指令）上叠加第一版 AST、本地队列集成和物理意图提示词，保留 Gemini → DeepSeek 兜底及新旧浏览器协议兼容。发布前发现线上已从原兜底版本更新，版本保护阻止了旧基线覆盖；最终以最新线上源码重新构建和验证。
 
 - 应用 current：`/opt/optional-reality/releases/20261025T054254Z-ast-meaning`。
-- 静态 current：`/var/www/muu-tech/releases/20261025T054254Z-ast-meaning-optional-reality-game`。
+- 静态 current：`/var/www/games/releases/20261025T054254Z-ast-meaning-optional-reality-game`。
 - 上一版：应用 `20261025T053645Z-277ecc5-briefing-arithmetic`，静态为同名加 `-optional-reality-game`，原目录完整保留。
 - 服务器备份：`/var/backups/optional-reality/20261025T054254Z-ast-meaning/`，目录 700；包含旧源码（排除 .env 与依赖）、旧静态目录、原链接、服务单元、仅在服务器保留的配置备份（600）及验收日志。
 - 独立发布快照与截图：`.localwork/ast-latest-release-20261025/`，不提交构建产物、日志或私有配置。
@@ -38,7 +40,7 @@
 ```sh
 set -eu
 app_root=/opt/optional-reality
-site_root=/var/www/muu-tech
+site_root=/var/www/games
 test "$(readlink -f "$app_root/current")" = "$app_root/releases/20261025T054254Z-ast-meaning"
 test "$(readlink -f "$site_root/current")" = "$site_root/releases/20261025T054254Z-ast-meaning-optional-reality-game"
 ln -s "$app_root/releases/20261025T053645Z-277ecc5-briefing-arithmetic" "$app_root/.rollback-ast-app-$$"
